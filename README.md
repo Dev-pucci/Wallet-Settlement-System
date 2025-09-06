@@ -412,13 +412,4 @@ curl http://localhost:8080/api/v1/actuator/health
 6. Push to branch: `git push origin feature/amazing-feature`
 7. Submit pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 📞 Support
-
-For questions and support:
-- Create an issue in the GitHub repository
-- Check the troubleshooting section above
-- Review the comprehensive test cases for usage examples
+Created with ❤️ by Pucci.
