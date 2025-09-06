@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: wallet-postgres
+    environment:
+      POSTGRES_DB: wallet_db
+      POSTGRES_USER: wallet_user
+      POSTGRES_PASSWORD: wallet_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - wallet-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet_user -d wallet_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: wallet-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: wallet_user
+      RABBITMQ_DEFAULT_PASS: wallet_pass
+      RABBITMQ_DEFAULT_VHOST: wallet_vhost
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - wallet-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  wallet-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wallet-settlement-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/wallet_db
+      SPRING_DATASOURCE_USERNAME: wallet_user
+      SPRING_DATASOURCE_PASSWORD: wallet_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: wallet_user
+      SPRING_RABBITMQ_PASSWORD: wallet_pass
+      SPRING_RABBITMQ_VIRTUAL_HOST: wallet_vhost
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - wallet-network
+    volumes:
+      - app_logs:/app/logs
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  app_logs:
+
+networks:
+  wallet-network:
+    driver: bridge

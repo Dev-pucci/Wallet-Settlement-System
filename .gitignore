@@ -1,0 +1,173 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Application specific
+data/
+temp/
+*.tmp
+
+# Development and testing files
+scripts/
+docs/
+logs/
+src/test/
+
+# Wallet Settlement System specific
+reconciliation_report_*.csv
+external_transactions_*.csv
+external_transactions_*.json
+uploads/
+reports/
+export/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test reports
+target/surefire-reports/
+target/failsafe-reports/
+target/site/
+test-output/
+allure-results/
+*.csv
+
+# Runtime files
+nohup.out
+*.pid
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.rej
+
+# Package files
+*.zip
+*.tar.gz
+*.rar
+
+# Node modules (if any frontend tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Spring Boot
+spring.log
+
+# Security & Certificates
+*.p12
+*.jks
+*.keystore
+*.truststore
+*.pem
+*.key
+*.crt
+*.cert
+
+# Local configuration overrides
+application-local.yml
+application-local.properties
+bootstrap-local.yml
+bootstrap-local.properties
+
+# IDE additional files
+.metadata/
+.recommenders/
+.sonarlint/
+nbproject/
+nb-configuration.xml
+*.swp
+*.swo
+
+# Coverage and analysis
+jacoco.exec
+.sonar/
+sonar-project.properties
+
+# Local database dumps
+*.sql
+*.dump
+
+# Performance and profiling
+*.hprof
+*.prof
+flight.jfr
+
+# Local development scripts
+run-local.sh
+run-local.bat
+setup-dev.sh
+setup-dev.bat
+
+# Kubernetes and deployment
+k8s-local/
+helm-values-local.yaml
+deployment-local.yaml
+
+# External system integration (local testing)
+mock-external-api/
+test-certificates/
+local-keys/
+
+# Docker volumes data (if mounted locally)
+postgres-data/
+rabbitmq-data/
+app-data/

@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: wallet-settlement-system
+  
+  profiles:
+    active: local
+    
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wallet_db
+    username: wallet_user
+    password: wallet_pass
+    driver-class-name: org.postgresql.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: false
+    open-in-view: false
+    
+  flyway:
+    enabled: false
+    
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: wallet_user
+    password: wallet_pass
+    virtual-host: wallet_vhost
+    connection-timeout: 30s
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        auto-startup: true
+    
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+      
+  actuator:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,prometheus
+    endpoint:
+      health:
+        show-details: when_authorized
+        
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+    
+logging:
+  level:
+    com.wallet: INFO
+    org.springframework.amqp: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/wallet-settlement-system.log
+    
+wallet:
+  transaction:
+    retry:
+      max-attempts: 3
+      delay: 1000
+    timeout: 30000
+  reconciliation:
+    batch-size: 1000
+    schedule:
+      cron: "0 0 2 * * ?"  # Run at 2 AM daily
+  rabbitmq:
+    queues:
+      transaction-processing: wallet.transaction.processing
+      reconciliation-processing: wallet.reconciliation.processing
+    exchanges:
+      wallet-exchange: wallet.exchange
+    routing-keys:
+      transaction: transaction.process
+      reconciliation: reconciliation.process
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/wallet_db
+    
+  rabbitmq:
+    host: rabbitmq
+    
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    
+  flyway:
+    enabled: false
+    
+  rabbitmq:
+    host: localhost
+    port: 5673  # Different port for tests
