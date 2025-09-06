@@ -60,6 +60,7 @@ scripts/
 docs/
 logs/
 src/test/
+postman_collection.json
 
 # Wallet Settlement System specific
 reconciliation_report_*.csv
